@@ -38,6 +38,11 @@ ABySS-Connector operates in three steps.  In the first step, the kmers from all 
 
 ### Loading the Bloom Filter de Bruijn Graph
 ### Finding Connecting Paths within the de Bruijn Graph
+
+
+![graph search figure](https://github.com/bcgsc/abyss-connector-paper/raw/master/figures/graphsearch_placeholder.png "graph search figure placeholder")
+_Placeholder Figure: Bidirectional breadth first search between paired-end reads in the de Bruijn graph. The real figure should more clearly depict the chosen start/end kmers, the expanding nature of the search, and the common edge connecting the two traversals._ 
+
 ### Reconciling Alternate Paths between Read Pairs
 
 ## Results
