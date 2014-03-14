@@ -7,7 +7,7 @@ Full paper submissions to HiTSeq 2014 have the same requirements as "Original Pa
 * Preferred submission formats: Word 2003 for document, .TIF or .EPS for images
 * Up to 7 pages in length (~ 5000 words)
 * The research must be demonstrated with real biological data, not just simulated data
-* Required sections:
+* Recommended Structure:
   * Title page
   * Structured Abstract
     * Motivation
