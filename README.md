@@ -43,14 +43,13 @@ ABySS-Connector operates in three steps.  In the first step, the kmers from all 
 ## Results
 
 ### Synthetic Data: Human Chromosome 21
-#### Coverage of Reference by Connected Read Pairs
-#### Correctness of Generated Sequences
-
+#### Effect of Sequencing Parameters
+##### Error Rate
+##### Gap Size
+##### Coverage
+#### Effect of Algorithm Parameters
+##### k
+##### Bloom Filter Size
 ### Real Data: Illumina Sequencing for Human Individual NA19238
 
 Data: https://www.ebi.ac.uk/ena/data/view/PRJEB4252
-
-#### Coverage of Reference by Connected Read Pairs
-#### Correctness of Generated Sequences
-
-
