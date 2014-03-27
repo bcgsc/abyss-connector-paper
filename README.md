@@ -116,6 +116,8 @@ Data: https://www.ebi.ac.uk/ena/data/view/PRJEB4252
 + $r_1$ is the number of bits per k-mer using one hash function
 + $r_2$ is the number of bits per k-mer using two hash functions
 
+![Memory usage](memory-usage.png)
+
 $$
 p = 0.183
 \\
