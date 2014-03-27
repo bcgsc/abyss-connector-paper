@@ -56,7 +56,7 @@ When two pairs have been connected by a unique path between the two reads, the o
 
 ![connector params figure](https://github.com/bcgsc/abyss-connector-paper/raw/master/figures/connector_params.png  "connector params figure")
 
-_Figure: Effect of sequencing parameters and algorithmic parameters on the psuedoread yield of ABySS Connector, using synthetic read data generated from human chromosome 21.  The Y axis represents the percentage of read pairs that were successfully merged as a function of sequencing error rate, fold coverage, bloom filter false positive rate, fragment length, and k value.  The results for haploid and diploid synthetic data sets are shown in black and gray, respectively._   
+_Figure: Effect of sequencing parameters and algorithmic parameters on the pseudoread yield of ABySS Connector, using synthetic read data generated from human chromosome 21.  The Y axis represents the percentage of read pairs that were successfully merged as a function of sequencing error rate, fold coverage, bloom filter false positive rate, fragment length, and k value.  The results for haploid and diploid synthetic data sets are shown in black and gray, respectively._   
 
 #### Effect of Sequencing Parameters
 ##### Error Rate
