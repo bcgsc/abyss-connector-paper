@@ -36,7 +36,40 @@ ABySS-Connector determines the unknown nucleotide sequence in the gap between tw
 
 ABySS-Connector operates in three steps.  In the first step, the kmers from all of the paired end reads are loaded into a bloom filter representing the de Bruijn graph.  In the second step, a bidirectional graph search is carried out between each pair of reads to find connecting paths.  In the third and final step, a consensus sequence is constructed for each read pair which has multiple connecting paths, or the connecting sequence is used unmodified in the case of a unique path.
 
+### The Bloom filter de Bruijn graph data structure
+
+A Bloom filter ([bloom][]) is a probabilistic and memory-efficient data structure that represents a set of elements.
+A de Bruijn graph may be represented using a Bloom filter, where the presence or absence of a k-mer in the graph is indicated by the Bloom filter.
+The use of a Bloom filter to represent a de Bruijn graph has been described previously for partitioning assembly graphs ([khmer][]) and genome sequence assembly ([minia][]).
+
+A Bloom filter is a probabilistic data structure.
+If the k-mer is present, it will certainly return true.
+If however the k-mer is not present, it may incorrectly return true with some probability, the false positive rate (FPR).
+The FPR is determined by the size of the Bloom filter, the number of distinct elements inserted and the number of hash functions.
+
+The khmer paper ([khmer][]) showed using percolation theory that an appropriate FPR for a DNA de Bruijn graph is 0.183.
+The optimal number of hash functions for this FPR is two (see the supplementary material).
+Using additional hash functions comes with a computational cost.
+To improve performance and for ease of implementation, we use a single hash function, which comes at the cost of an increase in memory usage of 40% from the theoretical optimum of 3.6 bits per k-mer to 5.0 bits per k-mer.
+
+k-mers observed only once in the data are usually erroneous.
+A Bloom filter indicates only presence or absence and does not count the number of occurrences.
+A counting filter may be used to return not just presence or absence of a k-mer, but an upper bound on the number of occurrences of that k-mer.
+Using two bits per bucket, for example, a counting filter can report, 0, 1, 2 or 3+ occurrences.
+Rather than using a counting filter, we use a cascade of two Bloom filters.
+Although not strictly necessary, both filters are the same size in our implementation.
+The second filter could be smaller because fewer k-mer are inserted, reducing memory usage.
+Using a cascade of two equal-sized Bloom filters doubles the memory requirement to 10 bits per k-mer.
+Once the Bloom filter is constructed, the first filter may be discarded, reducing the memory requirement to 5 bits per k-mer.
+
+When inserting a k-mer, we check for its presence in the first filter.
+If it is not found, it is inserted in the first filter.
+If it is found, it is inserted in the second filter.
+When testing for the presence of a k-mer, if it is not found in the first filter, it does not occur in the data set.
+If it is not found in the second filter, it occurs at most once in the data set, and may be discarded from the graph.
+
 ### Loading the Bloom Filter de Bruijn Graph
+
 ### Finding Connecting Paths within the de Bruijn Graph
 
 ![graph search figure](https://github.com/bcgsc/abyss-connector-paper/raw/master/figures/graphsearch_placeholder.png "graph search figure placeholder") _Placeholder Figure: Bidirectional breadth first search between paired-end reads in the de Bruijn graph. The real figure should more clearly depict the chosen start/end kmers, the expanding nature of the search, and the common edge connecting the two traversals._ 
@@ -65,3 +98,38 @@ Optimally, under the best conditions of coverage, k value, realistic base error 
 ### Real Data: Illumina Sequencing for Human Individual NA19238
 
 Data: https://www.ebi.ac.uk/ena/data/view/PRJEB4252
+
+## References
+
+[bloom]: http://dl.acm.org/citation.cfm?doid=362686.362692
+[khmer]: http://www.pnas.org/content/109/33/13272
+[minia]: http://www.almob.org/content/8/1/22
+
+# Supplementary Material
+
+## Number of bits per k-mer
+
++ $p$ is the false positive rate
++ $k$ is the number hash functions
++ $k_{opt}$ is the optimal number hash functions
++ $r$ is the number of bits per k-mer
++ $r_1$ is the number of bits per k-mer using one hash function
++ $r_2$ is the number of bits per k-mer using two hash functions
+
+$$
+p = 0.183
+\\
+r_{opt} = \frac{- \ln p}{(\ln 2)^2} \simeq 3.53
+\\
+k_{opt} = r_{opt} \ln 2 \simeq 2.45
+\\
+p \approx (1 - e^{-\frac{k}{r}})^k
+\\
+r \approx = \frac{-k}{\ln (1 - p^{\frac{1}{k}})}
+\\
+r_2 = \frac{-2}{\ln (1 - \sqrt{p})} \simeq 3.58
+\\
+r_1 = \frac{-1}{\ln (1 - p)} \simeq 4.95
+\\
+\frac{r_1}{r_2} = 1.38
+$$
