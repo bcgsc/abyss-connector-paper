@@ -47,7 +47,6 @@ The search for paths between paired end reads is subject to several contraints. 
 
 ### Reconciling Alternate Paths between Read Pairs
 
-### Reporting Pseudoreads
 When two pairs have been connected by a unique path between the two reads, the original sequence is then replaced with the kmer sequence that links the two reads flanked by the segments of reads that occurred before the start node and after the end node. When there were multiple paths between the connected pairs, a pair wise Smith-Waterman (ref) sequence alignment is performed between each path requiring that there be less than some threshold of mismatches. A consensus sequence can then be reported using IUPAC (ref) ambiguity codes to represent mismatches between paths. Similar to when there is a unique path, the consensus is reported with the sequences of the original read pairs on either side.
 
 ## Results
