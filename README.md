@@ -78,6 +78,9 @@ The search for paths between paired end reads is subject to several contraints. 
 
 The first step of the search algorithm is to select a single _start kmer_ from the first read and a single _goal kmer_ from the second read as endpoints for the path search. The choice of start and goal kmers can have a significant effect on the speed of the algorithm because it alters the distance between the path endpoints and hence the maximum depth limit of the search. For this reason, the default behaviour of the algorithm is to select start and goal kmers that are as close as possible to the ends of the reads. It is not guaranteed that every kmer in a read will be present in the graph because kmers that occur only once are excluded from the second level Bloom filter. With the exception of low coverage sequence, singleton kmers are caused by sequencing errors.
 
+The graph search algorithm used by ABySS Connector is a depth-limited, bidirectional breadth-first search. In scenarios where the goal and start node are both known, bidirectional search algorithms reduce the expansion of the search frontier and thus offer significant performance advantages over standard unidirectional search algorithms ([Pohl][]). Breadth-first search was chosen over depth-first-search for this application because it allows the minimum distance of each node from the start/goal node to be tracked during the traversal, which is in turn used to enforce the depth limit for the search. ABySS Connector's search algorithm is a modification of a standard breadth-first algorithm which tracks the state two simultaneous breadth-first searches, and alternates between them with the addition of each new edge. Whereas a standard breadth-first search implementation use a single data structure to track the status of each node (unvisited, previously visited, or exhausted), the bidirectional version uses two such data structures and requires that the two traversals check each other's node states in order to detect when the traversals overlap.  Pseudocode for the algorithm is provided is Supplementary Figure **XXX**.
+
+
 ### Reconciling Alternate Paths between Read Pairs
 
 When two pairs have been connected by a unique path between the two reads, the original sequence is then replaced with the kmer sequence that links the two reads flanked by the segments of reads that occurred before the start node and after the end node. When there were multiple paths between the connected pairs, a pair wise Smith-Waterman (ref) sequence alignment is performed between each path requiring that there be less than some threshold of mismatches. A consensus sequence can then be reported using IUPAC (ref) ambiguity codes to represent mismatches between paths. Similar to when there is a unique path, the consensus is reported with the sequences of the original read pairs on either side.
@@ -104,6 +107,7 @@ Data: https://www.ebi.ac.uk/ena/data/view/PRJEB4252
 [bloom]: http://dl.acm.org/citation.cfm?doid=362686.362692
 [khmer]: http://www.pnas.org/content/109/33/13272
 [minia]: http://www.almob.org/content/8/1/22
+[Pohl]: Pohl, Ira (1971), "Bi-directional Search", in Meltzer, Bernard; Michie, Donald, Machine Intelligence 6, Edinburgh University Press, pp. 127–140
 
 # Supplementary Material
 
